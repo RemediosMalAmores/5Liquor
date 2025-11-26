@@ -12,13 +12,14 @@
   <style>
     /* === Navbar layout general (desktop) === */
     .navbar-content {
-      display: grid;
-      grid-template-columns: 280px 1fr 160px; /* IZQ – CENTRO – DERECHA */
-      align-items: center;
-      width: 100%;
-      gap: 16px;
-      transition: all 0.3s ease;
-    }
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  width: 100%;
+  gap: 16px;
+  transition: all 0.3s ease;
+}
+
 
     .left-nav {
       display: flex;
@@ -256,10 +257,12 @@
       </div>
 
       <!-- DERECHA: botones extra -->
-      <div class="nav-right">
-        <button class="nav-button" onclick="location.href='pagina1.html'">Página 1</button>
-        <button class="nav-button" onclick="location.href='pagina2.html'">Página 2</button>
-      </div>
+     <div class="nav-right">
+    <button class="nav-button" onclick="location.href='https://www.5liquorstore.com/pages/contact'">
+        Contáctanos
+    </button>
+</div>
+
 
     </div>
   </div>
@@ -418,5 +421,41 @@
       });
     });
   </script>
+  <!-- Overlay de búsqueda premium -->
+<div id="searchOverlay">
+  <div id="closeSearch">✖</div>
+  <input id="overlaySearch" class="search-input" type="text" placeholder="Buscar producto...">
+</div>
+
+<!-- Botón FAB de búsqueda -->
+<div class="search-fab" id="openSearch">
+  <img src="search.svg" alt="Buscar">
+</div>
+
+<script>
+  const overlay = document.getElementById("searchOverlay");
+  const openBtn = document.getElementById("openSearch");
+  const closeBtn = document.getElementById("closeSearch");
+  const overlayInput = document.getElementById("overlaySearch");
+  const mainSearch = document.getElementById("searchInput");
+
+  openBtn.onclick = () => {
+    overlay.classList.add("active");
+    setTimeout(() => overlayInput.focus(), 150);
+  };
+
+  closeBtn.onclick = () => {
+    overlay.classList.remove("active");
+    overlayInput.value = "";
+    mainSearch.value = "";
+    renderGrid("");
+  };
+
+  overlayInput.addEventListener("input", () => {
+    const term = overlayInput.value.trim().toLowerCase();
+    mainSearch.value = term;
+    renderGrid(term);
+  });
+</script>
 </body>
 </html>
