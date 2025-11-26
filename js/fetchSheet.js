@@ -31,13 +31,15 @@ async function getProducts() {
 
   // Cabeceras esperadas
   const headers = rows.shift().map(h => (h || "").trim().toLowerCase());
-  const idx = {
+ const idx = {
     clase: headers.indexOf("cse_prod"),
     codigo: headers.indexOf("cve_prod"),
     desc: headers.indexOf("desc_prod"),
     stock: headers.indexOf("existencias"),
-    img: headers.indexOf("cve_image")
-  };
+    img: headers.indexOf("cve_image"),
+    verif: headers.indexOf("verificado")
+};
+
   if (Object.values(idx).some(i => i === -1)) {
     console.error("⚠️ No se encontraron columnas esperadas.");
     return [];
@@ -50,8 +52,22 @@ async function getProducts() {
     const desc = (r[idx.desc] || "").trim();
     const stock = parseInt((r[idx.stock] || "").trim()) || 0;
     const imagen_name = (r[idx.img] || "").trim();
+    const verificadoRaw = (r[idx.verif] || "").toString().trim().toLowerCase();
 
-    if (!codigo || !desc || stock <= 0) return null;
+// solo validar que haya código y descripción
+if (!codigo || !desc) return null;
+
+// Google Sheets suele exportar checkbox como TRUE/FALSE.
+// Aun así, soportamos varias variantes por si acaso.
+const checked =
+  verificadoRaw === "true" ||
+  verificadoRaw === "verdadero" ||
+  verificadoRaw === "1" ||
+  verificadoRaw === "sí" ||
+  verificadoRaw === "si";
+
+if (!checked) return null;
+
 
     // Detectar presentación real
     const presMatch = desc.match(/([0-9]+ ?m?l|[0-9]+ ?l|[0-9]+ ?lt)/i);
