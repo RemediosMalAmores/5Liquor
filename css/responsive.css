@@ -216,3 +216,10 @@
     display: none !important;
   }
 }
+/* ❌ Ocultar burbuja del carrito en escritorio */
+@media (min-width: 1025px) {
+  #cartBtn,
+  .cart-fab {
+    display: none !important;
+  }
+}
